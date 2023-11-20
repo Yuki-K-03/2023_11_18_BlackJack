@@ -24,6 +24,6 @@ public:
 public:
 	void Hit_card(CShoe& cShoe, int size = 1);
 	int Get_hamdSize() const;
-	void ShowHand();
+	s_card GetHand(int n) const;
 	int SumScore();
 };

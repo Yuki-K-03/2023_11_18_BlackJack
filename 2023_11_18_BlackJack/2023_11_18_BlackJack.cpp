@@ -1,6 +1,7 @@
 ﻿#include <cstdio>
 #include <iostream>
 #include<ctime>
+#include "Deck.h"
 #include "PlayerDeck.h"
 #include "DealerDeck.h"
 #include "Shoe.h"
@@ -11,12 +12,10 @@ const char* CARD_NUMBER[] = { "  ", " A", " 2", " 3", " 4", " 5", " 6", " 7", " 
 const char* CARD_SUIT[] = { "  heart", "diamond", "  spade", "   club" };
 
 void Deal(CPlayerDeck& cPlayer, CDealerDeck& cDealer, CShoe& cShoe);
-void Player(CPlayerDeck& cPlayer, CShoe& cShoe);
-void Dealer(CDealerDeck& cDealer, CShoe& cShoe);
+void Play(CPlayerDeck& cPlayer, CShoe& cShoe);
+void Play(CDealerDeck& cDealer, CShoe& cShoe);
+void ShowHand(CDeck& pRef);
 void Result(CPlayerDeck cPlayer, CDealerDeck cDealer);
-void Show(CDeck& pRef) {
-	printf("%d", pRef.Get_hamdSize());
-}
 
 int main() {
 	CShoe cShoe;
@@ -39,11 +38,11 @@ int main() {
 
 	// プレイヤ
 	printf("\n----- プレイヤのターン -----\n");
-	Player(cPlayer, cShoe);
+	Play(cPlayer, cShoe);
 
 	// ディーラー
 	printf("\n---- ディーラーのターン ----\n");
-	Dealer(cDealer, cShoe);
+	Play(cDealer, cShoe);
 
 	// 勝利判定
 	Result(cPlayer, cDealer);
@@ -53,9 +52,6 @@ int main() {
 	cShoe.Show_cradShoe();
 	printf("\n");
 #endif // DEBUG
-
-	Show(cPlayer);
-	printf("\n\n");
 
 	return 0;
 }
@@ -67,21 +63,21 @@ void Deal(CPlayerDeck& cPlayer, CDealerDeck& cDealer, CShoe& cShoe) {
 	cDealer.Hit_card(cShoe, 2);
 	// アップカード
 	printf("アップカード\n");
-	printf("num:%s, suit:%s\n", CARD_NUMBER[cDealer.UpCard().cardNum], CARD_SUIT[cDealer.UpCard().cardSuit]);
+	printf("num:%s, suit:%s\n", CARD_NUMBER[cDealer.GetHand(0).cardNum], CARD_SUIT[cDealer.GetHand(0).cardSuit]);
 	// スコア表示
-	printf("Score:%s + a\n\n", CARD_NUMBER[cDealer.UpCard().cardNum]);
+	printf("Score:%s + a\n\n", CARD_NUMBER[cDealer.GetHand(0).cardNum]);
 
 	// 初手プレイヤ
 	cPlayer.Hit_card(cShoe, 2);
 	// 手札表示
 	printf("プレイヤ手札\n");
-	cPlayer.ShowHand();
+	ShowHand(cPlayer);
 	// スコア表示
 	printf("Score:%d\n", cPlayer.SumScore());
 	printf("\n");
 }
 
-void Player(CPlayerDeck& cPlayer, CShoe& cShoe) {
+void Play(CPlayerDeck& cPlayer, CShoe& cShoe) {
 	int select = 0;
 
 	do {
@@ -91,7 +87,7 @@ void Player(CPlayerDeck& cPlayer, CShoe& cShoe) {
 			printf("ヒット\n");
 			cPlayer.Hit_card(cShoe);
 		}
-		cPlayer.ShowHand();
+		ShowHand(cPlayer);
 		printf("Score:%d\n", cPlayer.SumScore());
 		if (cPlayer.SumScore() > 21) {
 			printf("バースト\n");
@@ -99,16 +95,22 @@ void Player(CPlayerDeck& cPlayer, CShoe& cShoe) {
 	} while (select != 1 && cPlayer.SumScore() <= 21);
 }
 
-void Dealer(CDealerDeck& cDealer, CShoe& cShoe) {
-	cDealer.ShowHand();
+void Play(CDealerDeck& cDealer, CShoe& cShoe) {
+	ShowHand(cDealer);
 	printf("Score:%d\n", cDealer.SumScore());
 	while (cDealer.SumScore() < 17) {
 		cDealer.Hit_card(cShoe);
-		cDealer.ShowHand();
+		ShowHand(cDealer);
 		printf("Score:%d\n", cDealer.SumScore());
 		if (cDealer.SumScore() > 21) {
 			printf("バースト\n");
 		}
+	}
+}
+
+void ShowHand(CDeck& pRef) {
+	for (int i = 0; i < pRef.Get_hamdSize(); i++) {
+		printf("num:%s, suit:%s\n", CARD_NUMBER[pRef.GetHand(i).cardNum], CARD_SUIT[pRef.GetHand(i).cardSuit]);
 	}
 }
 

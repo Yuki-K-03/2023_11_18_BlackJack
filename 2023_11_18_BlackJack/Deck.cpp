@@ -20,10 +20,11 @@ int CDeck::Get_hamdSize() const{
 	return _handSize;
 }
 
-void CDeck::ShowHand() {
-	for (int i = 0; i < _handSize; i++) {
+s_card CDeck::GetHand(int n) const {
+	/*for (int i = 0; i < _handSize; i++) {
 		printf("num:%s, suit:%s\n", CARD_NUMBER[_cardHand[i].cardNum], CARD_SUIT[_cardHand[i].cardSuit]);
-	}
+	}*/
+	return _cardHand[n];
 }
 
 int CDeck::SumScore() {

@@ -3,6 +3,5 @@
 
 class CDealerDeck :
 	public CDeck {
-public :
-	s_card UpCard();
+
 };
